@@ -15,7 +15,7 @@ namespace WebApplication1.Services
         public Response Login(string username, string password)
         {
             // Validate credentials
-            // Return user session info
+            // Return user sessiontoken info
             return new Response();
         }
 
