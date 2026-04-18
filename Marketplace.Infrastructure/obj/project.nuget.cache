@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "+OB7/gJul44=",
+  "success": true,
+  "projectFilePath": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\MarketPlace.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Ahmed Ismail\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

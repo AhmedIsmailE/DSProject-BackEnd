@@ -1,0 +1,156 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\VS Projects\\MarketPlace\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{5B1C365A-F3F2-4904-A840-57C4BCBD31C4}|MarketPlace\\MarketPlace.Backend.csproj|d:\\vs projects\\marketplace\\marketplace\\backendprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5B1C365A-F3F2-4904-A840-57C4BCBD31C4}|MarketPlace\\MarketPlace.Backend.csproj|solutionrelative:marketplace\\backendprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C76E2FF5-FDB7-4F5B-9109-0004D1B32F97}|Marketplace.Gateway\\Marketplace.Gateway.csproj|d:\\vs projects\\marketplace\\marketplace.gateway\\gatewayprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C76E2FF5-FDB7-4F5B-9109-0004D1B32F97}|Marketplace.Gateway\\Marketplace.Gateway.csproj|solutionrelative:marketplace.gateway\\gatewayprogram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\data\\mock\\mocktransactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\data\\mock\\mocktransactionrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\data\\mock\\mockwalletrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\data\\mock\\mockwalletrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\data\\mock\\mockuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\data\\mock\\mockuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\data\\mock\\mockitemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\data\\mock\\mockitemrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|d:\\vs projects\\marketplace\\marketplace.infrastructure\\data\\mock\\mockdatabasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC500BFE-7B3B-4AEE-AA8B-22F4C08D2386}|Marketplace.Infrastructure\\Marketplace.Infrastructure.csproj|solutionrelative:marketplace.infrastructure\\data\\mock\\mockdatabasecontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "BackendProgram.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\MarketPlace\\BackendProgram.cs",
+              "RelativeDocumentMoniker": "MarketPlace\\BackendProgram.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\MarketPlace\\BackendProgram.cs",
+              "RelativeToolTip": "MarketPlace\\BackendProgram.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:35:28.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GatewayProgram.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Gateway\\GatewayProgram.cs",
+              "RelativeDocumentMoniker": "Marketplace.Gateway\\GatewayProgram.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Gateway\\GatewayProgram.cs",
+              "RelativeToolTip": "Marketplace.Gateway\\GatewayProgram.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:34:20.381Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MockTransactionRepository.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockTransactionRepository.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\Data\\Mock\\MockTransactionRepository.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockTransactionRepository.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\Data\\Mock\\MockTransactionRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:33:36.706Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "MockWalletRepository.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockWalletRepository.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\Data\\Mock\\MockWalletRepository.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockWalletRepository.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\Data\\Mock\\MockWalletRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:33:22.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DependencyInjection.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\DependencyInjection.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\DependencyInjection.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\DependencyInjection.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\DependencyInjection.cs",
+              "ViewState": "AgIAAAQAAAAAAAAAAADwvyAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:30:58.382Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MockUserRepository.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockUserRepository.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\Data\\Mock\\MockUserRepository.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockUserRepository.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\Data\\Mock\\MockUserRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:30:36.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MockItemRepository.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockItemRepository.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\Data\\Mock\\MockItemRepository.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockItemRepository.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\Data\\Mock\\MockItemRepository.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAADwvzYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:30:35.541Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MockDatabaseContext.cs",
+              "DocumentMoniker": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockDatabaseContext.cs",
+              "RelativeDocumentMoniker": "Marketplace.Infrastructure\\Data\\Mock\\MockDatabaseContext.cs",
+              "ToolTip": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\Data\\Mock\\MockDatabaseContext.cs",
+              "RelativeToolTip": "Marketplace.Infrastructure\\Data\\Mock\\MockDatabaseContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-18T13:30:12.766Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
