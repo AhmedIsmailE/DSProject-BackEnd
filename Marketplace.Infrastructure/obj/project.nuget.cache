@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+OB7/gJul44=",
+  "dgSpecHash": "UYl3x3omWoM=",
   "success": true,
-  "projectFilePath": "D:\\VS Projects\\MarketPlace\\Marketplace.Infrastructure\\MarketPlace.Infrastructure.csproj",
+  "projectFilePath": "D:\\ASU\\senior1\\Spring\\distrubited\\PROJECT\\backEnd\\take2\\Marketplace.Infrastructure\\MarketPlace.Infrastructure.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Ahmed Ismail\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512"
+    "C:\\Users\\basel\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512"
   ],
   "logs": []
 }

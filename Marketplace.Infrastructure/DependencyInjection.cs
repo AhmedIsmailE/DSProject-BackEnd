@@ -1,5 +1,4 @@
-﻿using Marketplace.Infrastructure.Data.Mock;
-using MarketPlace.Domain.Repositories;
+﻿using MarketPlace.Domain.Repositories;
 using MarketPlace.Infrastructure.Data.Mock;
 using Microsoft.Extensions.DependencyInjection;
 

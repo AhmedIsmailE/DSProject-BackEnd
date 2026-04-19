@@ -19,5 +19,11 @@ namespace MarketPlace.Infrastructure.Data.Mock
             MockDatabaseContext.Wallets.AddOrUpdate(wallet.Id, wallet, (key, old) => wallet);
             return Task.CompletedTask;
         }
+
+        public Task AddAsync(Wallet wallet)
+        {
+            MockDatabaseContext.Wallets.TryAdd(wallet.Id, wallet);
+            return Task.CompletedTask;
+        }
     }
 }

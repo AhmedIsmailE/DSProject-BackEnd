@@ -1,9 +1,10 @@
-﻿using System;
+﻿using MarketPlace.Domain.Entities;
+using MarketPlace.Domain.Repositories;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MarketPlace.Domain.Entities;
-using MarketPlace.Domain.Repositories;
 
 namespace MarketPlace.Infrastructure.Data.Mock
 {
@@ -35,17 +36,22 @@ namespace MarketPlace.Infrastructure.Data.Mock
 
         public Task<IEnumerable<Item>> SearchAvailableItemsAsync(string searchTerm)
         {
-            // TODO: Filter the Items dictionary where IsAvailable == true 
-            // and Name or Description contains the searchTerm.
-            var results = MockDatabaseContext.Items.Values
-                .Where(i => i.IsAvailable && i.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+            if(string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var allAvailableItems = MockDatabaseContext.Items.Values.Where(i => i.IsAvailable);
+                return Task.FromResult<IEnumerable<Item>>(allAvailableItems);
+            }
 
-            return Task.FromResult<IEnumerable<Item>>(results);
+            IEnumerable<Item> results = MockDatabaseContext.Items.Values
+                .Where(i => i.IsAvailable && 
+                            (i.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) || 
+                             i.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
+
+            return Task.FromResult(results);
         }
 
         public Task<IEnumerable<Item>> GetItemsByOwnerIdAsync(Guid ownerId)
         {
-            // TODO: Filter items by OwnerId
             var results = MockDatabaseContext.Items.Values
                 .Where(i => i.OwnerId == ownerId);
 
