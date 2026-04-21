@@ -12,5 +12,7 @@ namespace MarketPlace.Domain.Repositories
 
         /// Updates the user's data (e.g., after deducting wallet balance).
         Task UpdateAsync(User user);
+
+        Task AddAsync(User user);
     }
 }

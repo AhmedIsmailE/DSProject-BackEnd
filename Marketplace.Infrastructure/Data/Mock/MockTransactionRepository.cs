@@ -16,13 +16,30 @@ namespace MarketPlace.Infrastructure.Data.Mock
 
         public Task UpdateAsync(Transaction transaction)
         {
-            MockDatabaseContext.Transactions.AddOrUpdate(transaction.Id, transaction, (key, old) => transaction);
+            MockDatabaseContext.Transactions.
+                AddOrUpdate(transaction.Id, transaction, (key, old) => transaction);
             return Task.CompletedTask;
+        }
+
+        public Task<Transaction?> GetByIdAsync(Guid id)
+        {
+            MockDatabaseContext.Transactions.TryGetValue(id, out var transaction);
+            return Task.FromResult(transaction);
         }
 
         public Task<IEnumerable<Transaction>> GetAllTransactionsForReportAsync()
         {
-            return Task.FromResult<IEnumerable<Transaction>>(MockDatabaseContext.Transactions.Values);
+            var transactions = MockDatabaseContext.Transactions.Values.ToList();
+            return Task.FromResult<IEnumerable<Transaction>>(transactions);
+        }
+
+        public Task<IEnumerable<Transaction>> GetByUserIdAsync(Guid userId)
+        {
+            var results = MockDatabaseContext.Transactions.Values
+                .Where(t => t.BuyerId == userId || t.SellerId == userId)
+                .ToList();
+
+            return Task.FromResult<IEnumerable<Transaction>>(results);
         }
     }
 }
