@@ -8,5 +8,9 @@ namespace MarketPlace.Domain.Repositories
     {
         Task<Wallet?> GetByUserIdAsync(Guid userId);
         Task UpdateAsync(Wallet wallet);
+
+        Task AddAsync(Wallet wallet);
+
+        Task<Wallet?> DepositAsync(Guid userId, decimal amount);
     }
 }

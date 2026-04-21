@@ -1,36 +1,35 @@
-﻿using MarketPlace.Application.DTOs;
+﻿using System.Text.Json;
+using MarketPlace.Application.DTOs;
+using MarketPlace.Domain.Entities;
 using MarketPlace.Domain.Repositories;
-using System;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MarketPlace.Application.Commands
 {
-    public class LoginCommandHandler
+    public class CreateAccountCommandHandler
     {
         private readonly IUserRepository _userRepository;
+        private readonly IWalletRepository _walletRepository;
 
-        public LoginCommandHandler(IUserRepository userRepository)
+        public CreateAccountCommandHandler(IUserRepository userRepository, IWalletRepository walletRepository)
         {
             _userRepository = userRepository;
+            _walletRepository = walletRepository;
         }
 
         public async Task<JsonEnvelope> HandleAsync(JsonEnvelope request)
         {
-            /*
-             JSON request example:
-             {
-                  "CorrelationId": "req-001",
-                  "Command": "LOGIN",
+            /* Example of incoming request:
+                {
+                  "CorrelationId": "req-002",
+                  "Command": "CREATE_ACCOUNT",
                   "Payload": "{\"Username\":\"ahmed\",\"Password\":\"123456\"}"
-             }
-             payload:
-             {
+                }
+               Payload:
+                {
                   "Username": "ahmed",
                   "Password": "123456"
-             }
+                }
              */
-
 
             string username;
             string password;
@@ -47,7 +46,7 @@ namespace MarketPlace.Application.Commands
             {
                 return BuildResponse(
                     request.CorrelationId,
-                    "LOGIN_FAILED",
+                    "CREATE_ACCOUNT_FAILED",
                     new
                     {
                         Success = false,
@@ -59,7 +58,7 @@ namespace MarketPlace.Application.Commands
             {
                 return BuildResponse(
                     request.CorrelationId,
-                    "LOGIN_FAILED",
+                    "CREATE_ACCOUNT_FAILED",
                     new
                     {
                         Success = false,
@@ -67,51 +66,48 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
-            var user = await _userRepository.GetByUsernameAsync(username);
+            // Check if user exists
+            var existingUser = await _userRepository.GetByUsernameAsync(username);
 
-            if (user == null)
+            if (existingUser != null)
             {
                 return BuildResponse(
                     request.CorrelationId,
-                    "LOGIN_FAILED",
+                    "CREATE_ACCOUNT_FAILED",
                     new
                     {
                         Success = false,
-                        Message = "User not found."
+                        Message = "Username already exists."
                     });
             }
-            if (user.PasswordHash != password)
-            {
-                return BuildResponse(
-                    request.CorrelationId,
-                    "LOGIN_FAILED",
-                    new
-                    {
-                        Success = false,
-                        Message = "Invalid username or password."
-                    });
-            }
+
+            var user = new User{Id = Guid.NewGuid(), Username = username, PasswordHash = password};
+            var wallet = new Wallet{Id = Guid.NewGuid(), UserId = user.Id, Balance = 0};
+
+            await _userRepository.AddAsync(user);
+            await _walletRepository.AddAsync(wallet);
 
             return BuildResponse(
                 request.CorrelationId,
-                "LOGIN_SUCCESS",
+                "CREATE_ACCOUNT_SUCCESS",
                 new
                 {
                     Success = true,
-                    Message = "Login successful.",
-                    UserId = user.Id,
-                    Username = user.Username
+                    Message = "Account created successfully.",
+                    UserId = user.Id
                 });
         }
 
-        private static JsonEnvelope BuildResponse(string correlationId, string command, object responsePayload)
+        private static JsonEnvelope BuildResponse(string correlationId, string command, object payload)
         {
             return new JsonEnvelope
             {
                 CorrelationId = correlationId,
                 Command = command,
-                Payload = JsonSerializer.Serialize(responsePayload) // Payload = "{\"Success\":true, \"Message\":\"Login successful.\", \"Username\":\"ahmed\"}"
+                Payload = JsonSerializer.Serialize(payload)
             };
         }
     }
 }
+
+
