@@ -1,4 +1,6 @@
-﻿using MarketPlace.Application.DTOs;
+﻿using MarketPlace.Application.Commands;
+using MarketPlace.Application.DTOs;
+using System.Text.Json;
 using System;
 using System.Threading.Tasks;
 // using Marketplace.Application.Commands; // Add reference when implemented
@@ -7,10 +9,24 @@ namespace MarketPlace.Backend.TCPServer.Routing
 {
     public class CommandDispatcher
     {
-        // In a real implementation, you would inject an IServiceProvider here to resolve handlers dynamically
+        private readonly LoginCommandHandler _loginCommandHandler;
+        private readonly CreateAccountCommandHandler _createAccountCommandHandler;
+        private readonly PurchaseItemCommandHandler _purchaseItemCommandHandler;
+        private readonly DepositCashCommandHandler _depositCashCommandHandler;
+        private readonly AddItemCommandHandler _addItemCommandHandler;
 
-        public CommandDispatcher()
+        public CommandDispatcher(
+            LoginCommandHandler loginCommandHandler,
+            CreateAccountCommandHandler createAccountCommandHandler,
+            PurchaseItemCommandHandler purchaseItemCommandHandler,
+            DepositCashCommandHandler depositCashCommandHandler,
+            AddItemCommandHandler addItemCommandHandler)
         {
+            _loginCommandHandler = loginCommandHandler;
+            _createAccountCommandHandler = createAccountCommandHandler;
+            _purchaseItemCommandHandler = purchaseItemCommandHandler;
+            _depositCashCommandHandler = depositCashCommandHandler;
+            _addItemCommandHandler = addItemCommandHandler;
         }
 
         /// <summary>
@@ -18,28 +34,48 @@ namespace MarketPlace.Backend.TCPServer.Routing
         /// </summary>
         public async Task<JsonEnvelope> DispatchAsync(JsonEnvelope request)
         {
-            // TODO:
-            // 1. Switch on request.Command (e.g., case "LOGIN", case "PURCHASE_ITEM").
-            // 2. Resolve the appropriate CommandHandler.
-            // 3. Await handler.HandleAsync(request).
-            // 4. Return the resulting JsonEnvelope to be sent back down the TCP socket.
-
-            switch (request.Command.ToUpper())
+            if (request == null)
             {
-                case "PURCHASE_ITEM":
-                    // return await _purchaseHandler.HandleAsync(request);
-                    break;
-                case "LOGIN":
-                    // return await _loginHandler.HandleAsync(request);
-                    break;
+                return BuildResponse(
+                    string.Empty,
+                    "INVALID_REQUEST",
+                    new
+                    {
+                        Success = false,
+                        Message = "Request is null."
+                    });
             }
 
-            // Default fallback
+            switch (request.Command?.ToUpperInvariant())
+            {
+                case "PURCHASE_ITEM":
+                    return await _purchaseItemCommandHandler.HandleAsync(request);
+                case "LOGIN":
+                    return await _loginCommandHandler.HandleAsync(request);
+                case "CREATE_ACCOUNT":
+                    return await _createAccountCommandHandler.HandleAsync(request);
+                case "DEPOSIT_CASH":
+                    return await _depositCashCommandHandler.HandleAsync(request);
+                case "ADD_ITEM":
+                    return await _addItemCommandHandler.HandleAsync(request);
+                default:
+                    return BuildResponse(
+                        request.CorrelationId,
+                        "UNKNOWN_COMMAND",
+                        new
+                        {
+                            Success = false,
+                            Message = $"Command '{request.Command}' is not recognized."
+                        });
+            }
+        }
+        private static JsonEnvelope BuildResponse(string correlationId, string command, object responsePayload)
+        {
             return new JsonEnvelope
             {
-                CorrelationId = request.CorrelationId,
-                Command = "UNKNOWN_COMMAND",
-                Payload = "{}"
+                CorrelationId = correlationId,
+                Command = command,
+                Payload = JsonSerializer.Serialize(responsePayload)
             };
         }
     }
