@@ -1,13 +1,19 @@
 ﻿namespace MarketPlace.Domain.Entities
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class User
     {
-        public Guid Id { get; set; }
+        public int UserId { get; set; }   
         public string Username { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;   
         public string PasswordHash { get; set; } = string.Empty;
-        public decimal WalletBalance { get; set; }
-
-        // Navigation properties for EF Core later
-        // public ICollection<Item> Inventory { get; set; } = new List<Item>();
+        public string? TwoFactorSecret { get; set; }  
+        public bool IsVerified { get; set; }  
+        public bool IsActive { get; set; } = true;  
+        public string? ProfileImageUrl { get; set; }   
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

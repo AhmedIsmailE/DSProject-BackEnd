@@ -5,7 +5,7 @@ namespace MarketPlace.Domain.Repositories
     public interface IUserRepository
     {
         /// Retrieves a user by their unique identifier.
-        Task<User?> GetByIdAsync(Guid id);
+        Task<User?> GetByIdAsync(int id);
 
         /// Retrieves a user by their username (useful for login).
         Task<User?> GetByUsernameAsync(string username);

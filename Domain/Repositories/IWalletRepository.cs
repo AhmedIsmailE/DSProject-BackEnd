@@ -6,11 +6,11 @@ namespace MarketPlace.Domain.Repositories
 {
     public interface IWalletRepository
     {
-        Task<Wallet?> GetByUserIdAsync(Guid userId);
+        Task<Wallet?> GetByUserIdAsync(int userId);
         Task UpdateAsync(Wallet wallet);
 
         Task AddAsync(Wallet wallet);
 
-        Task<Wallet?> DepositAsync(Guid userId, decimal amount);
+        Task<Wallet?> DepositAsync(int userId, decimal amount);
     }
 }
