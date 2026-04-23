@@ -40,7 +40,7 @@ namespace MarketPlace.Backend.TCPServer.Routing
                 // Resolve handlers within the scope
                 var loginCommandHandler = scope.ServiceProvider.GetRequiredService<LoginCommandHandler>();
                 var createAccountCommandHandler = scope.ServiceProvider.GetRequiredService<CreateAccountCommandHandler>();
-                var purchaseItemCommandHandler = scope.ServiceProvider.GetRequiredService<PurchaseItemCommandHandler>();
+                var purchaseItemCommandHandler = scope.ServiceProvider.GetRequiredService<CheckoutCartCommandHandler>();
                 var depositCashCommandHandler = scope.ServiceProvider.GetRequiredService<DepositCashCommandHandler>();
                 var addItemCommandHandler = scope.ServiceProvider.GetRequiredService<AddItemCommandHandler>();
 

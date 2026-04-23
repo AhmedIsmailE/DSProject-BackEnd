@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddScoped<LoginCommandHandler>();
 builder.Services.AddScoped<CreateAccountCommandHandler>();
-builder.Services.AddScoped<PurchaseItemCommandHandler>();
+builder.Services.AddScoped<CheckoutCartCommandHandler>();
 builder.Services.AddScoped<DepositCashCommandHandler>();
 builder.Services.AddScoped<AddItemCommandHandler>();
 // --- 1. Register Infrastructure and Application Services ---

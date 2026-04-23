@@ -13,10 +13,12 @@ namespace MarketPlace.Application.Commands
     public class DeleteItemCommandHandler
     {
         private readonly IItemRepository _itemRepository;
+        private readonly IStoreRepository _storeRepository;
 
-        public DeleteItemCommandHandler(IItemRepository itemRepository)
+        public DeleteItemCommandHandler(IItemRepository itemRepository, IStoreRepository storeRepository)
         {
             _itemRepository = itemRepository;
+            _storeRepository = storeRepository;
         }
 
         public async Task<JsonEnvelope> HandleAsync(JsonEnvelope request)
@@ -24,7 +26,7 @@ namespace MarketPlace.Application.Commands
             // 1. Deserialize request payload into DTO
             var payload = JsonSerializer.Deserialize<DeleteItemPayload>(request.Payload);
 
-            if (payload is null || payload.ItemId == Guid.Empty)
+            if (payload is null || payload.ItemId == 0)
             {
                 return new JsonEnvelope
                 {
@@ -32,6 +34,7 @@ namespace MarketPlace.Application.Commands
                     CorrelationId = request.CorrelationId,
                     Payload = JsonSerializer.Serialize(new
                     {
+                        Success = false,
                         Message = "Invalid payload"
                     })
                 };
@@ -39,15 +42,14 @@ namespace MarketPlace.Application.Commands
 
             // 2. Get item from repository
             var item = await _itemRepository.GetByIdAsync(payload.ItemId) ?? throw new ItemNotFoundException(payload.ItemId);
+            var store = await _storeRepository.GetByIdAsync(item.StoreId) ?? throw new Exception("Store not found");
 
             // 3.1 Soft delete (option 1) - mark item as unavailable
             //item.IsAvailable = false;
             //await _itemRepository.UpdateAsync(item);
 
             // 3.2 Hard delete (option 2) - remove item from repository
-            await _itemRepository.DeleteAsync(payload.ItemId);
-
-            if (item.OwnerId != payload.RequestingUserId)
+            if (store.OwnerId != payload.RequestingUserId)
             {
                 return new JsonEnvelope
                 {
@@ -56,6 +58,8 @@ namespace MarketPlace.Application.Commands
                     Payload = JsonSerializer.Serialize(new { Success = false, Message = "Unauthorized" })
                 };
             }
+            await _itemRepository.DeleteAsync(payload.ItemId);
+
             // 4. Return success response
             return new JsonEnvelope
             {
@@ -64,10 +68,10 @@ namespace MarketPlace.Application.Commands
                 Payload = JsonSerializer.Serialize(new
                 {
                     Success = true,
-                    ItemId = item.Id
+                    ItemId = item.ItemId
                 })
             };
         }
     }
-    public record DeleteItemPayload(Guid ItemId, Guid RequestingUserId);
+    public record DeleteItemPayload(int ItemId, int RequestingUserId);
 }

@@ -19,7 +19,7 @@ namespace MarketPlace.Application.Queries
         {
             // 1. Deserialize request.Payload to get the UserId.
             var payload = JsonSerializer.Deserialize<GetUserInventoryPayload>(request.Payload);
-            if (payload is null || payload.OwnerId == Guid.Empty)
+            if (payload is null || payload.OwnerId == 0) // Zero is the supposed to be the value of empty ID (Default value).
             {
                 return new JsonEnvelope
                 {
@@ -45,5 +45,5 @@ namespace MarketPlace.Application.Queries
             };
         }
     }
-    public record GetUserInventoryPayload(Guid OwnerId);
+    public record GetUserInventoryPayload(int OwnerId);
 }
