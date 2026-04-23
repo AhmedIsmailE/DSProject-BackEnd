@@ -15,15 +15,32 @@ namespace MarketPlace.Backend.TCPServer
         {
             payload = Array.Empty<byte>();
 
-            // TODO:
-            // 1. Check if buffer.Length >= 4. If not, return false.
-            // 2. Slice the first 4 bytes and convert them back to an integer (payloadLength).
-            // 3. Check if buffer.Length >= (4 + payloadLength). If not, return false (message is fragmented, wait for more).
-            // 4. If we have the full message, slice the payload bytes out of the buffer.
-            // 5. Update the 'buffer' reference to point past the consumed message (Advance the pipeline).
-            // 6. Set 'out payload' to the extracted bytes and return true.
+            // 1. Check if we have at least the 4-byte header
+            if (buffer.Length < 4) return false;
 
-            return false;
+            // 2. Extract the 4 bytes into a stack-allocated span (Zero garbage collection/memory leaks)
+            Span<byte> lengthBytes = stackalloc byte[4];
+            buffer.Slice(0, 4).CopyTo(lengthBytes);
+
+            // Convert Big-Endian to architecture native
+            if (BitConverter.IsLittleEndian)
+            {
+                lengthBytes.Reverse();
+            }
+
+            int payloadLength = BitConverter.ToInt32(lengthBytes);
+
+            // 3. Check if we have the full message (Header + Payload)
+            if (buffer.Length < 4 + payloadLength) return false;
+
+            // 4. We have the full message! Extract the payload bytes.
+            payload = buffer.Slice(4, payloadLength).ToArray();
+
+            // 5. Update the 'buffer' reference to point past the consumed message (Advance the pipeline)
+            buffer = buffer.Slice(4 + payloadLength);
+
+            // 6. Return true indicating a full frame was extracted
+            return true;
         }
     }
 }

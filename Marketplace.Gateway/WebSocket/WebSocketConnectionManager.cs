@@ -1,41 +1,89 @@
-﻿using System;
+﻿using MarketPlace.Gateway.ClientServer;
 using System.Net.WebSockets;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Marketplace.Gateway.WebSockets
+namespace MarketPlace.Gateway.WebSockets;
+
+public class WebSocketToSocketProxy
 {
-    public class WebSocketConnectionManager
+    private readonly WebSocket _webSocket;
+    private readonly string _sockectHost;
+    private readonly int _sockectPort;
+
+    public WebSocketToSocketProxy(WebSocket webSocket, string sockectHost, int sockectPort)
     {
-        // You would inject your TcpClientWrapper here to forward the data
+        _webSocket = webSocket;
+        _sockectHost = sockectHost;
+        _sockectPort = sockectPort;
+    }
 
-        public async Task HandleConnectionAsync(WebSocket webSocket)
+    public async Task StartProxyingAsync(CancellationToken cancellationToken)
+    {
+        using var SocketWrapper = new ClientServerWrapper();
+        await SocketWrapper.ConnectAsync(_sockectHost, _sockectPort);
+
+        // Run both read loops concurrently
+        var wsToSocketTask = PumpWebSocketToSocketAsync(SocketWrapper, cancellationToken);
+        var SocketToWsTask = PumpSocketToWebSocketAsync(SocketWrapper, cancellationToken);
+
+        // If either side disconnects, the task completes and tears down the proxy
+        await Task.WhenAny(wsToSocketTask, SocketToWsTask);
+    }
+
+    private async Task PumpWebSocketToSocketAsync(ClientServerWrapper SocketWrapper, CancellationToken cancellationToken)
+    {
+        var buffer = new byte[1024 * 4];
+
+        try
         {
-            var buffer = new byte[1024 * 4]; // 4KB buffer
-
-            // TODO: Initiate connection to the C# Backend TCP port here
-
-            // The main listening loop for the browser connection
-            while (webSocket.State == WebSocketState.Open)
+            while (_webSocket.State == WebSocketState.Open && !cancellationToken.IsCancellationRequested)
             {
-                var receiveResult = await webSocket.ReceiveAsync(
-                    new ArraySegment<byte>(buffer), CancellationToken.None);
+                var result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 
-                if (receiveResult.MessageType == WebSocketMessageType.Close)
+                if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    await webSocket.CloseAsync(
-                        WebSocketCloseStatus.NormalClosure,
-                        "Client disconnected",
-                        CancellationToken.None);
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Client closing", cancellationToken);
+                    break;
                 }
-                else if (receiveResult.MessageType == WebSocketMessageType.Text)
+
+                // Assuming text/JSON communication
+                if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    // TODO: 
-                    // 1. Extract the actual payload bytes from the buffer (using receiveResult.Count)
-                    // 2. Pass those bytes to your TcpClientWrapper to prepend the 4-byte header
-                    // 3. Send over the raw TCP socket
+                    string jsonPayload = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    await SocketWrapper.SendMessageAsync(jsonPayload, cancellationToken);
                 }
             }
+        }
+        catch (OperationCanceledException) { /* Normal termination */ }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"WS -> Socket Error: {ex.Message}");
+        }
+    }
+
+    private async Task PumpSocketToWebSocketAsync(ClientServerWrapper SocketWrapper, CancellationToken cancellationToken)
+    {
+        try
+        {
+            while (_webSocket.State == WebSocketState.Open && !cancellationToken.IsCancellationRequested)
+            {
+                string? jsonResponse = await SocketWrapper.ReceiveMessageAsync(cancellationToken);
+
+                if (jsonResponse == null) break; // Backend closed connection
+
+                byte[] responseBytes = Encoding.UTF8.GetBytes(jsonResponse);
+
+                await _webSocket.SendAsync(
+                    new ArraySegment<byte>(responseBytes),
+                    WebSocketMessageType.Text,
+                    true,
+                    cancellationToken);
+            }
+        }
+        catch (OperationCanceledException) { /* Normal termination */ }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Socket -> WS Error: {ex.Message}");
         }
     }
 }
