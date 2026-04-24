@@ -24,7 +24,7 @@ namespace MarketPlace.Application.Commands
             var payload = JsonSerializer.Deserialize<AddItemPayload>(request.Payload);
 
             // 2. Validate the data.
-            if (payload is null || payload.RequestingUserId == 0 || payload.StoreId == 0 || payload.CategoryId == 0)
+            if (payload is null || payload.RequestingUserId <= 0 || payload.StoreId <= 0 || payload.CategoryId <= 0)
             {
                 return new JsonEnvelope
                 {
