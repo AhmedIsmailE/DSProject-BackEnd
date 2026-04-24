@@ -108,26 +108,24 @@ namespace MarketPlace.Application.Commands
             }
 
             var cart = await _cartRepository.GetByUserIdAsync(userId);
-            if (cart == null)
+            if (cart == null )
             {
                 cart = new Cart
                 {
                     UserId = userId,
-                    Status = CartStatus.Active,
-                    Items = new List<CartItem>()
+                    Status = CartStatus.active,
+                    Items = new List<CartItem>{
+                        new CartItem
+                        {
+                            ItemId = itemId,
+                            Quantity = quantity
+                        }
+                    }
                 };
-                await _cartRepository.AddAsync(cart);
 
-                cart.Items.Add(new CartItem
-                {
-                    CartId = cart.CartId,
-                    ItemId = itemId,
-                    Quantity = quantity
-                });
-                cart.UpdatedAt = DateTime.UtcNow;
-                await _cartRepository.UpdateAsync(cart);
+                await _cartRepository.AddAsync(cart);
             }
-            else
+            else 
             {
                 var existingCartItem = cart.Items.FirstOrDefault(ci => ci.ItemId == itemId);
                 if (existingCartItem != null)

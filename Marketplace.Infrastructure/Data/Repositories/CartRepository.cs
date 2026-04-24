@@ -43,7 +43,7 @@ namespace MarketPlace.Infrastructure.Data.Repositories
         {
             return await _db.Carts
                             .Include(c => c.Items)
-                            .FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.Active);
+                            .FirstOrDefaultAsync(c => c.UserId == userId && c.Status == CartStatus.active);
         }
 
         public async Task UpdateAsync(Cart cart)

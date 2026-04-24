@@ -11,16 +11,15 @@
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }   
         public string? ImageUrl { get; set; }   
-        public ItemStatus Status { get; set; } = ItemStatus.Available;  
+        public ItemStatus Status { get; set; } = ItemStatus.available;  
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public bool IsAvailable => (Status == ItemStatus.Available) && (StockQuantity > 0); 
+        public bool IsAvailable => (Status == ItemStatus.available) && (StockQuantity > 0); 
     }
-
     public enum ItemStatus
     {
-        Available,
-        Sold,
-        Removed
+        available,
+        sold,
+        removed
     }
 }

@@ -148,9 +148,9 @@ namespace MarketPlace.Infrastructure.Data
                 e.HasKey(t => t.TransactionId);
                 e.Property(t => t.TransactionId).HasColumnName("transaction_id").ValueGeneratedOnAdd();
                 e.Property(t => t.BuyerId).HasColumnName("buyer_id").IsRequired();
-                e.Property(t => t.SellerId).HasColumnName("seller_id").IsRequired();
-                e.Property(t => t.CategoryId).HasColumnName("category_id").IsRequired();  
-                e.Property(t => t.ItemId).HasColumnName("item_id").IsRequired();
+                e.Property(t => t.SellerId).HasColumnName("seller_id");
+                e.Property(t => t.CategoryId).HasColumnName("category_id");  
+                e.Property(t => t.ItemId).HasColumnName("item_id");
                 e.Property(t => t.Amount).HasColumnName("amount").HasColumnType("decimal(12,2)").IsRequired();
                 e.Property(t => t.TransactionType).HasColumnName("transaction_type")
                  .HasConversion<string>().HasMaxLength(20);
@@ -162,6 +162,7 @@ namespace MarketPlace.Infrastructure.Data
                 e.HasIndex(t => t.BuyerId);
                 e.HasIndex(t => t.SellerId);
                 e.HasIndex(t => t.CategoryId);
+                e.HasIndex(t => t.ItemId);
                 e.HasIndex(t => t.CreatedAt);
             });
         }
@@ -176,7 +177,9 @@ namespace MarketPlace.Infrastructure.Data
                 e.Property(c => c.UserId).HasColumnName("user_id").IsRequired();
                 e.Property(c => c.CreatedAt).HasColumnName("created_at");
                 e.Property(c => c.UpdatedAt).HasColumnName("updated_at").IsConcurrencyToken();
-
+                e.Property(c => c.Status).HasColumnName("status")
+                 .HasConversion<string>()
+                 .HasMaxLength(20);
                 e.HasMany(c => c.Items)
                  .WithOne()
                  .HasForeignKey(ci => ci.CartId);

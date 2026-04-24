@@ -50,7 +50,7 @@ namespace MarketPlace.Infrastructure.Data.Repositories
         {
             var query = _db.Items
                            .AsNoTracking()
-                           .Where(i => i.StockQuantity > 0 && i.Status == ItemStatus.Available);
+                           .Where(i => i.StockQuantity > 0 && i.Status == ItemStatus.available);
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

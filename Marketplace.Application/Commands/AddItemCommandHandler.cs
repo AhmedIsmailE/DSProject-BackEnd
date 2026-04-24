@@ -93,7 +93,7 @@ namespace MarketPlace.Application.Commands
                 ImageUrl = payload.ImageUrl,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                Status = payload.StockQuantity > 0 ? ItemStatus.Available : ItemStatus.Sold,
+                Status = payload.StockQuantity > 0 ? ItemStatus.available : ItemStatus.sold,
             };
 
             // 4. Await _itemRepository.AddAsync(newItem).
