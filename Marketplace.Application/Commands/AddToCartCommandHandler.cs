@@ -116,14 +116,16 @@ namespace MarketPlace.Application.Commands
                     Status = CartStatus.Active,
                     Items = new List<CartItem>()
                 };
+                await _cartRepository.AddAsync(cart);
 
                 cart.Items.Add(new CartItem
                 {
+                    CartId = cart.CartId,
                     ItemId = itemId,
                     Quantity = quantity
                 });
-
-                await _cartRepository.AddAsync(cart);
+                cart.UpdatedAt = DateTime.UtcNow;
+                await _cartRepository.UpdateAsync(cart);
             }
             else
             {

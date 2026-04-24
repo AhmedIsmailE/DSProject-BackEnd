@@ -177,6 +177,10 @@ namespace MarketPlace.Infrastructure.Data
                 e.Property(c => c.CreatedAt).HasColumnName("created_at");
                 e.Property(c => c.UpdatedAt).HasColumnName("updated_at").IsConcurrencyToken();
 
+                e.HasMany(c => c.Items)
+                 .WithOne()
+                 .HasForeignKey(ci => ci.CartId);
+
                 e.HasIndex(c => c.UserId).IsUnique();
             });
         }

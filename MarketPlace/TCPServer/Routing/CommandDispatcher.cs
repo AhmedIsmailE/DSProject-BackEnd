@@ -40,14 +40,20 @@ namespace MarketPlace.Backend.TCPServer.Routing
                 // Resolve handlers within the scope
                 var loginCommandHandler = scope.ServiceProvider.GetRequiredService<LoginCommandHandler>();
                 var createAccountCommandHandler = scope.ServiceProvider.GetRequiredService<CreateAccountCommandHandler>();
-                var purchaseItemCommandHandler = scope.ServiceProvider.GetRequiredService<CheckoutCartCommandHandler>();
+                var checkoutCartCommandHandler = scope.ServiceProvider.GetRequiredService<CheckoutCartCommandHandler>();
                 var depositCashCommandHandler = scope.ServiceProvider.GetRequiredService<DepositCashCommandHandler>();
                 var addItemCommandHandler = scope.ServiceProvider.GetRequiredService<AddItemCommandHandler>();
+                var editItemCommandHandler = scope.ServiceProvider.GetRequiredService<EditItemCommandHandler>();
+                var deleteItemCommandHandler = scope.ServiceProvider.GetRequiredService<DeleteItemCommandHandler>();
+                var addToCartCommandHandler = scope.ServiceProvider.GetRequiredService<AddToCartCommandHandler>();
+                var removeFromCartCommandHandler = scope.ServiceProvider.GetRequiredService<RemoveFromCartCommandHandler>();
+                var updateCartItemQuantityCommandHandler = scope.ServiceProvider.GetRequiredService<UpdateCartItemQuantityCommandHandler>();
+                var createStoreCommandHandler = scope.ServiceProvider.GetRequiredService<CreateStoreCommandHandler>();
 
                 switch (request.Command?.ToUpperInvariant())
                 {
-                    case "PURCHASE_ITEM":
-                        return await purchaseItemCommandHandler.HandleAsync(request);
+                    case "CHECKOUT_CART":
+                        return await checkoutCartCommandHandler.HandleAsync(request);
                     case "LOGIN":
                         return await loginCommandHandler.HandleAsync(request);
                     case "CREATE_ACCOUNT":
@@ -56,6 +62,18 @@ namespace MarketPlace.Backend.TCPServer.Routing
                         return await depositCashCommandHandler.HandleAsync(request);
                     case "ADD_ITEM":
                         return await addItemCommandHandler.HandleAsync(request);
+                    case "EDIT_ITEM":
+                        return await editItemCommandHandler.HandleAsync(request);
+                    case "DELETE_ITEM":
+                        return await deleteItemCommandHandler.HandleAsync(request);
+                    case "ADD_TO_CART":
+                        return await addToCartCommandHandler.HandleAsync(request);
+                    case "REMOVE_FROM_CART":
+                        return await removeFromCartCommandHandler.HandleAsync(request);
+                    case "UPDATE_CART_ITEM_QUANTITY":
+                        return await updateCartItemQuantityCommandHandler.HandleAsync(request);
+                    case "CREATE_STORE":
+                        return await createStoreCommandHandler.HandleAsync(request);
                     default:
                         return BuildResponse(
                             request.CorrelationId,

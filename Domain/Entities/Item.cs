@@ -14,7 +14,7 @@
         public ItemStatus Status { get; set; } = ItemStatus.Available;  
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        public bool IsAvailable => Status == ItemStatus.Available && StockQuantity > 0;
+        public bool IsAvailable => (Status == ItemStatus.Available) && (StockQuantity > 0); 
     }
 
     public enum ItemStatus

@@ -26,7 +26,7 @@ namespace MarketPlace.Application.Commands
             // 1. Deserialize request payload into DTO
             var payload = JsonSerializer.Deserialize<DeleteItemPayload>(request.Payload);
 
-            if (payload is null || payload.ItemId == 0)
+            if (payload is null || payload.ItemId <= 0)
             {
                 return new JsonEnvelope
                 {
