@@ -1,20 +1,32 @@
-﻿using System;
-
-namespace MarketPlace.Domain.Entities
+﻿namespace MarketPlace.Domain.Entities
 {
-    /// <summary>
-    /// Represents the historical record of a purchase. Essential for the reporting requirement.
-    /// </summary>
+
     public class Transaction
     {
-        public Guid Id { get; set; }
-        public Guid BuyerId { get; set; }
-        public Guid SellerId { get; set; }
-        public Guid ItemId { get; set; }
+        public int TransactionId { get; set; }   
+        public int BuyerId { get; set; }   
+        public int? SellerId { get; set; }   
+        public int? CategoryId { get; set; }   
+        public int? ItemId { get; set; }   
         public decimal Amount { get; set; }
-        public DateTime Timestamp { get; set; }
+        public TransactionType TransactionType { get; set; } = TransactionType.Purchase;
+        public TransactionStatus Status { get; set; } = TransactionStatus.Completed;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    }
 
-        // Important for the Saga pattern: Pending, Completed, or Failed/Reverted
-        public string Status { get; set; } = "Pending";
+    public enum TransactionType
+    {
+        Purchase,
+        Refund,
+        Deposit
+    }
+
+    public enum TransactionStatus
+    {
+        Pending,
+        Completed,
+        Failed,
+        Refunded
     }
 }

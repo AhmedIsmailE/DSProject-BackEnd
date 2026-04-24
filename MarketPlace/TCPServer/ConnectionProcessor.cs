@@ -14,14 +14,14 @@ namespace MarketPlace.Backend.TCPServer
     {
         private readonly Socket _socket;
         private readonly LengthPrefixFramer _framer;
-        private readonly CommandDispatcher _dispatcher;
+        private readonly IServiceScopeFactory _scopeFactory;
 
         // Uncommented and updated constructor
-        public ConnectionProcessor(Socket socket, LengthPrefixFramer framer, CommandDispatcher dispatcher)
+        public ConnectionProcessor(Socket socket, LengthPrefixFramer framer, IServiceScopeFactory scopeFactory)
         {
             _socket = socket;
             _framer = framer;
-            _dispatcher = dispatcher;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task StartAsync()
@@ -102,29 +102,33 @@ namespace MarketPlace.Backend.TCPServer
                                     try
                                     {
                                         // 1. Get the response from your application logic
-                                        JsonEnvelope responseEnvelope = await _dispatcher.DispatchAsync(envelope);
-
-                                        if (responseEnvelope != null)
-                                        {
-                                            // 2. Serialize the response back to JSON
-                                            string responseJson = JsonSerializer.Serialize(responseEnvelope);
-                                            byte[] responsePayload = Encoding.UTF8.GetBytes(responseJson);
-
-                                            // 3. Create the 4-byte Big-Endian Header
-                                            byte[] lengthHeader = BitConverter.GetBytes(responsePayload.Length);
-                                            if (BitConverter.IsLittleEndian)
+                                        using var scope = _scopeFactory.CreateScope();
+                                        {   
+                                            var dispatcher = scope.ServiceProvider.GetRequiredService<CommandDispatcher>();
+                                            JsonEnvelope responseEnvelope = await dispatcher.DispatchAsync(envelope);
+                                            if (responseEnvelope != null)
                                             {
-                                                Array.Reverse(lengthHeader);
+                                                // 2. Serialize the response back to JSON
+                                                string responseJson = JsonSerializer.Serialize(responseEnvelope);
+                                                byte[] responsePayload = Encoding.UTF8.GetBytes(responseJson);
+
+                                                // 3. Create the 4-byte Big-Endian Header
+                                                byte[] lengthHeader = BitConverter.GetBytes(responsePayload.Length);
+                                                if (BitConverter.IsLittleEndian)
+                                                {
+                                                    Array.Reverse(lengthHeader);
+                                                }
+
+                                                // 4. Combine Header + Payload into one packet
+                                                byte[] fullPacket = new byte[4 + responsePayload.Length];
+                                                Buffer.BlockCopy(lengthHeader, 0, fullPacket, 0, 4);
+                                                Buffer.BlockCopy(responsePayload, 0, fullPacket, 4, responsePayload.Length);
+
+                                                // 5. Send it back through the raw socket!
+                                                await _socket.SendAsync(fullPacket, SocketFlags.None);
                                             }
-
-                                            // 4. Combine Header + Payload into one packet
-                                            byte[] fullPacket = new byte[4 + responsePayload.Length];
-                                            Buffer.BlockCopy(lengthHeader, 0, fullPacket, 0, 4);
-                                            Buffer.BlockCopy(responsePayload, 0, fullPacket, 4, responsePayload.Length);
-
-                                            // 5. Send it back through the raw socket!
-                                            await _socket.SendAsync(fullPacket, SocketFlags.None);
                                         }
+
                                     }
                                     catch (Exception ex)
                                     {

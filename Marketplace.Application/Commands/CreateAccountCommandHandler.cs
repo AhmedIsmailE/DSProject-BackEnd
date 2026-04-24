@@ -33,6 +33,7 @@ namespace MarketPlace.Application.Commands
 
             string username;
             string password;
+            string email;
 
             try
             {
@@ -41,8 +42,9 @@ namespace MarketPlace.Application.Commands
 
                 username = root.GetProperty("Username").GetString() ?? string.Empty; // Expecting a property named "Username" in the JSON payload
                 password = root.GetProperty("Password").GetString() ?? string.Empty; // Expecting a property named "Password" in the JSON payload
+                email = root.GetProperty("Email").GetString() ?? string.Empty; // Expecting a property named "Password" in the JSON payload
             }
-            catch
+            catch (JsonException)
             {
                 return BuildResponse(
                     request.CorrelationId,
@@ -81,10 +83,10 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
-            var user = new User{Id = Guid.NewGuid(), Username = username, PasswordHash = password};
-            var wallet = new Wallet{Id = Guid.NewGuid(), UserId = user.Id, Balance = 0};
-
+            var user = new User{Username = username, PasswordHash = password, Email = email};
             await _userRepository.AddAsync(user);
+
+            var wallet = new Wallet{UserId = user.UserId, Balance = 0};
             await _walletRepository.AddAsync(wallet);
 
             return BuildResponse(
@@ -94,7 +96,7 @@ namespace MarketPlace.Application.Commands
                 {
                     Success = true,
                     Message = "Account created successfully.",
-                    UserId = user.Id
+                    UserId = user.UserId
                 });
         }
 

@@ -1,16 +1,26 @@
-﻿using System;
-
-namespace MarketPlace.Domain.Entities
+﻿namespace MarketPlace.Domain.Entities
 {
     public class Item
     {
-        public Guid Id { get; set; }
-        public Guid OwnerId { get; set; } // Links to the User who currently owns it
+        public int ItemId { get; set; }   
+        public int StoreId { get; set; }   
+        public int CategoryId { get; set; }   
         public string Name { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string? Brand { get; set; }   
+        public string? Description { get; set; }
         public decimal Price { get; set; }
+        public int StockQuantity { get; set; }   
+        public string? ImageUrl { get; set; }   
+        public ItemStatus Status { get; set; } = ItemStatus.Available;  
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public bool IsAvailable => Status == ItemStatus.Available && StockQuantity > 0;
+    }
 
-        // Critical for preventing double-purchasing in a distributed system
-        public bool IsAvailable { get; set; } = true;
+    public enum ItemStatus
+    {
+        Available,
+        Sold,
+        Removed
     }
 }

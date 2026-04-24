@@ -1,4 +1,5 @@
 ﻿using MarketPlace.Application.DTOs;
+using MarketPlace.Domain.Entities;
 using MarketPlace.Domain.Repositories;
 using System;
 using System.Text.Json;
@@ -10,11 +11,13 @@ namespace MarketPlace.Application.Commands
     {
         private readonly IUserRepository _userRepository;
         private readonly IWalletRepository _walletRepository;
+        private readonly ITransactionRepository _transactionRepository;
 
-        public DepositCashCommandHandler(IUserRepository userRepository, IWalletRepository walletRepository)
+        public DepositCashCommandHandler(IUserRepository userRepository, IWalletRepository walletRepository, ITransactionRepository transactionRepository)
         {
             _userRepository = userRepository;
             _walletRepository = walletRepository;
+            _transactionRepository = transactionRepository;
         }
 
         public async Task<JsonEnvelope> HandleAsync(JsonEnvelope request)
@@ -23,16 +26,16 @@ namespace MarketPlace.Application.Commands
                 {
                   "CorrelationId": "req-003",
                   "Command": "DEPOSIT_CASH",
-                  "Payload": "{\"UserId\":\"11111111-1111-1111-1111-111111111111\",\"Amount\":100.0}"
+                  "Payload": "{\"UserId\":\"1\",\"Amount\":100.0}"
                 }
                Payload:
                 {
-                  "UserId": "11111111-1111-1111-1111-111111111111",
+                  "UserId": "1",
                   "Amount": 100.0
                 }
              */
 
-            Guid userid;
+            int userid;
             decimal amount;
 
             try
@@ -40,10 +43,10 @@ namespace MarketPlace.Application.Commands
                 using var jsonDoc = JsonDocument.Parse(request.Payload);
                 var root = jsonDoc.RootElement;
 
-                userid = root.GetProperty("UserId").GetGuid();
+                userid = root.GetProperty("UserId").GetInt32();
                 amount = root.GetProperty("Amount").GetDecimal();
             }
-            catch
+            catch (JsonException)
             {
                 return BuildResponse(
                     request.CorrelationId,
@@ -81,7 +84,7 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
-            var wallet = await _walletRepository.DepositAsync(user.Id, amount);
+            var wallet = await _walletRepository.DepositAsync(user.UserId, amount);
 
             if (wallet == null)
             {
@@ -95,6 +98,16 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
+            var transaction = new Transaction
+            {
+                BuyerId = user.UserId,
+                Amount = amount,
+                TransactionType = TransactionType.Deposit,
+                Status = TransactionStatus.Completed
+            };
+
+            await _transactionRepository.AddAsync(transaction);
+
             return BuildResponse(
                 request.CorrelationId,
                 "DEPOSIT_SUCCESS",
@@ -106,7 +119,7 @@ namespace MarketPlace.Application.Commands
 
         }
 
-        private JsonEnvelope BuildResponse(string correlationId, string command, object payload)
+        private static JsonEnvelope BuildResponse(string correlationId, string command, object payload)
         {
             return new JsonEnvelope
             {

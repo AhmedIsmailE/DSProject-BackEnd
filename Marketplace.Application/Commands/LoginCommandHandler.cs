@@ -43,7 +43,7 @@ namespace MarketPlace.Application.Commands
                 username = root.GetProperty("Username").GetString() ?? string.Empty; // Expecting a property named "Username" in the JSON payload
                 password = root.GetProperty("Password").GetString() ?? string.Empty; // Expecting a property named "Password" in the JSON payload
             }
-            catch
+            catch (JsonException)
             {
                 return BuildResponse(
                     request.CorrelationId,
@@ -99,7 +99,7 @@ namespace MarketPlace.Application.Commands
                 {
                     Success = true,
                     Message = "Login successful.",
-                    UserId = user.Id,
+                    UserId = user.UserId,
                     Username = user.Username
                 });
         }

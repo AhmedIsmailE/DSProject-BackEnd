@@ -1,31 +1,40 @@
-﻿using MarketPlace.Infrastructure.Data.Mock;
-using MarketPlace.Domain.Repositories;
-using MarketPlace.Infrastructure.Data.Mock;
+﻿using MarketPlace.Domain.Repositories;
+using MarketPlace.Infrastructure.Data;
+using MarketPlace.Infrastructure.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MarketPlace.Infrastructure
 {
     public static class DependencyInjection
     {
-        /// <summary>
-        /// Extension method to register all infrastructure services.
-        /// Call this in your Backend's Program.cs.
-        /// </summary>
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
-            // Phase 1: Register the Mock Repositories
-            // We use Singleton here because our mock database is just a static dictionary.
-            // If we used Transient, it would wipe the data on every request!
-            services.AddSingleton<IUserRepository, MockUserRepository>();
-            services.AddSingleton<IItemRepository, MockItemRepository>();
-            services.AddSingleton<IWalletRepository, MockWalletRepository>();
-            services.AddSingleton<ITransactionRepository, MockTransactionRepository>();
+            var connectionString = configuration.GetConnectionString("MariaDb");
 
-            // Phase 2 (Future): When you build your real distributed DB, you will 
-            // comment out the lines above and uncomment the lines below.
-            // services.AddScoped<IUserRepository, SqlUserRepository>();
-            // services.AddScoped<IItemRepository, SqlItemRepository>();
-            // etc...
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString),
+                    mySql =>
+                    {
+                        // Retry on transient ZeroTier network blips
+                        mySql.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null);
+                    }));
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWalletRepository, WalletRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+
 
             return services;
         }

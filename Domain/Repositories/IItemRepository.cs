@@ -7,10 +7,10 @@ namespace MarketPlace.Domain.Repositories
 {
     public interface IItemRepository
     {
-        Task<Item?> GetByIdAsync(Guid id);
+        Task<Item?> GetByIdAsync(int id);
         Task AddAsync(Item item);
         Task UpdateAsync(Item item);
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(int id);
 
         /// <summary>
         /// Used for Feature v: Searching for items for sale.
@@ -20,6 +20,6 @@ namespace MarketPlace.Domain.Repositories
         /// <summary>
         /// Used for Feature vii: Viewing items to be sold.
         /// </summary>
-        Task<IEnumerable<Item>> GetItemsByOwnerIdAsync(Guid ownerId);
+        Task<IEnumerable<Item>> GetItemsByOwnerIdAsync(int ownerId);
     }
 }

@@ -12,16 +12,16 @@ namespace MarketPlace.Backend.TCPServer
     public class ServerSocketService : BackgroundService
     {
         private readonly ILogger<ServerSocketService> _logger;
-        private readonly CommandDispatcher _commandDispatcher;
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly LengthPrefixFramer _framer;
         private Socket? _listenerSocket;
         private readonly int _port = 5000;
 
         // Inject the dependencies registered in BackendProgram.cs
-        public ServerSocketService(ILogger<ServerSocketService> logger, CommandDispatcher commandDispatcher, LengthPrefixFramer framer)
+        public ServerSocketService(ILogger<ServerSocketService> logger, IServiceScopeFactory scopeFactory, LengthPrefixFramer framer)
         {
             _logger = logger;
-            _commandDispatcher = commandDispatcher;
+            _scopeFactory = scopeFactory;
             _framer = framer;
         }
 
@@ -56,7 +56,7 @@ namespace MarketPlace.Backend.TCPServer
         private async Task ProcessConnectionAsync(Socket socket, CancellationToken cancellationToken)
         {
             // 1 & 2: Instantiate ConnectionProcessor and pass the injected dependencies
-            var processor = new ConnectionProcessor(socket, _framer, _commandDispatcher);
+            var processor = new ConnectionProcessor(socket, _framer, _scopeFactory );
 
             // Start the pipeline loops
             await processor.StartAsync();
