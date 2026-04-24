@@ -6,7 +6,7 @@
         public int TransactionId { get; set; }   
         public int BuyerId { get; set; }   
         public int? SellerId { get; set; }
-        public int? CategoryId { get; set; } 
+        public int? CategoryId { get; set; } = 1; 
         public int? ItemId { get; set; }   
         public decimal Amount { get; set; }
         public TransactionType TransactionType { get; set; } = TransactionType.Purchase;
