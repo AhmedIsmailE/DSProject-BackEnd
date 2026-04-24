@@ -1,12 +1,13 @@
-﻿using System;
+﻿using MarketPlace.Application.DTOs;
+using MarketPlace.Domain.Entities;
+using MarketPlace.Domain.Exceptions;
+using MarketPlace.Domain.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using MarketPlace.Application.DTOs;
-using MarketPlace.Domain.Exceptions;
-using MarketPlace.Domain.Repositories;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MarketPlace.Application.Commands
 {
@@ -45,8 +46,6 @@ namespace MarketPlace.Application.Commands
             var store = await _storeRepository.GetByIdAsync(item.StoreId) ?? throw new Exception("Store not found");
 
             // 3.1 Soft delete (option 1) - mark item as unavailable
-            //item.IsAvailable = false;
-            //await _itemRepository.UpdateAsync(item);
 
             // 3.2 Hard delete (option 2) - remove item from repository
             if (store.OwnerId != payload.RequestingUserId)
@@ -58,7 +57,10 @@ namespace MarketPlace.Application.Commands
                     Payload = JsonSerializer.Serialize(new { Success = false, Message = "Unauthorized" })
                 };
             }
-            await _itemRepository.DeleteAsync(payload.ItemId);
+            //await _itemRepository.DeleteAsync(payload.ItemId);
+
+            item.Status = ItemStatus.removed;
+            await _itemRepository.UpdateAsync(item);
 
             // 4. Return success response
             return new JsonEnvelope

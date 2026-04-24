@@ -193,7 +193,7 @@ namespace MarketPlace.Application.Commands
 
                 if (item.StockQuantity == 0)
                 {
-                    item.Status = ItemStatus.Sold;
+                    item.Status = ItemStatus.sold;
                 }
 
                 item.UpdatedAt = DateTime.UtcNow;
@@ -213,7 +213,7 @@ namespace MarketPlace.Application.Commands
             }
 
             cart.Items.Clear();
-            cart.Status = CartStatus.CheckedOut; // can be edited if we want it to stay active for other uses or we can delete the cart entirely
+            cart.Status = CartStatus.checked_out; // can be edited if we want it to stay active for other uses or we can delete the cart entirely
             cart.UpdatedAt = DateTime.UtcNow;
 
             await _cartRepository.UpdateAsync(cart);

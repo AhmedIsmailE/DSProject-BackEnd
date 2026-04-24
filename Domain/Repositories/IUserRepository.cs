@@ -10,6 +10,7 @@ namespace MarketPlace.Domain.Repositories
         /// Retrieves a user by their username (useful for login).
         Task<User?> GetByUsernameAsync(string username);
 
+        Task<User?> GetByEmailAsync(string email);
         /// Updates the user's data (e.g., after deducting wallet balance).
         Task UpdateAsync(User user);
 

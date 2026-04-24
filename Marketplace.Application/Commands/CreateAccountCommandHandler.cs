@@ -56,7 +56,7 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(email))
             {
                 return BuildResponse(
                     request.CorrelationId,
@@ -80,6 +80,19 @@ namespace MarketPlace.Application.Commands
                     {
                         Success = false,
                         Message = "Username already exists."
+                    });
+            }
+            var existingEmailUser = await _userRepository.GetByEmailAsync(email);
+
+            if (existingEmailUser != null)
+            {
+                return BuildResponse(
+                    request.CorrelationId,
+                    "CREATE_ACCOUNT_FAILED",
+                    new
+                    {
+                        Success = false,
+                        Message = "Email already exists."
                     });
             }
 
