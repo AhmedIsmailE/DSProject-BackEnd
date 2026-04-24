@@ -3,23 +3,26 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using MarketPlace.Backend.TCPServer.Routing;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace MarketPlace.Backend.TCPServer
 {
-    /// <summary>
-    /// Runs continuously in the background alongside your Kestrel web server.
-    /// </summary>
-    public class TcpListenerService : BackgroundService
+    public class ServerSocketService : BackgroundService
     {
-        private readonly ILogger<TcpListenerService> _logger;
+        private readonly ILogger<ServerSocketService> _logger;
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly LengthPrefixFramer _framer;
         private Socket? _listenerSocket;
-        private readonly int _port = 9000; // The port the Gateway connects to
+        private readonly int _port = 5000;
 
-        public TcpListenerService(ILogger<TcpListenerService> logger)
+        // Inject the dependencies registered in BackendProgram.cs
+        public ServerSocketService(ILogger<ServerSocketService> logger, IServiceScopeFactory scopeFactory, LengthPrefixFramer framer)
         {
             _logger = logger;
+            _scopeFactory = scopeFactory;
+            _framer = framer;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,29 +37,31 @@ namespace MarketPlace.Backend.TCPServer
             {
                 try
                 {
-                    // Asynchronously accept incoming connections from the Gateway without blocking
                     var clientSocket = await _listenerSocket.AcceptAsync(stoppingToken);
-
                     _logger.LogInformation($"Client connected: {clientSocket.RemoteEndPoint}");
 
-                    // Fire and forget the connection processor so the listener can immediately accept the next client
                     _ = Task.Run(() => ProcessConnectionAsync(clientSocket, stoppingToken), stoppingToken);
                 }
                 catch (OperationCanceledException)
                 {
-                    // Server is shutting down gracefully
                     break;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"Error accepting connection: {ex.Message}");
                 }
             }
         }
 
         private async Task ProcessConnectionAsync(Socket socket, CancellationToken cancellationToken)
         {
-            // TODO: 
-            // 1. Instantiate your ConnectionProcessor class here.
-            // 2. Pass the socket to it so it can start the System.IO.Pipelines read/write loops.
+            // 1 & 2: Instantiate ConnectionProcessor and pass the injected dependencies
+            var processor = new ConnectionProcessor(socket, _framer, _scopeFactory );
 
-            await Task.CompletedTask;
+            // Start the pipeline loops
+            await processor.StartAsync();
+
+            _logger.LogInformation($"Client disconnected: {socket.RemoteEndPoint}");
         }
     }
 }

@@ -32,6 +32,9 @@ namespace MarketPlace.Infrastructure
             services.AddScoped<IWalletRepository, WalletRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+
 
             return services;
         }

@@ -33,6 +33,7 @@ namespace MarketPlace.Application.Commands
 
             string username;
             string password;
+            string email;
 
             try
             {
@@ -41,6 +42,7 @@ namespace MarketPlace.Application.Commands
 
                 username = root.GetProperty("Username").GetString() ?? string.Empty; // Expecting a property named "Username" in the JSON payload
                 password = root.GetProperty("Password").GetString() ?? string.Empty; // Expecting a property named "Password" in the JSON payload
+                email = root.GetProperty("Email").GetString() ?? string.Empty; // Expecting a property named "Password" in the JSON payload
             }
             catch (JsonException)
             {
@@ -81,7 +83,7 @@ namespace MarketPlace.Application.Commands
                     });
             }
 
-            var user = new User{Username = username, PasswordHash = password};
+            var user = new User{Username = username, PasswordHash = password, Email = email};
             await _userRepository.AddAsync(user);
 
             var wallet = new Wallet{UserId = user.UserId, Balance = 0};

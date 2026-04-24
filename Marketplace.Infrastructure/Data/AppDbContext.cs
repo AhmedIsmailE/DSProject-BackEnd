@@ -10,6 +10,8 @@ namespace MarketPlace.Infrastructure.Data
         public DbSet<Wallet> Wallets => Set<Wallet>();
         public DbSet<Store> Stores => Set<Store>();
         public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<CartItem> CartItems => Set<CartItem>();
 
         public DbSet<Item> Items => Set<Item>();
         public DbSet<Transaction> Transactions => Set<Transaction>();
@@ -26,6 +28,8 @@ namespace MarketPlace.Infrastructure.Data
             ConfigureCategory(modelBuilder);
             ConfigureItem(modelBuilder);
             ConfigureTransaction(modelBuilder);
+            ConfigureCart(modelBuilder);
+            ConfigureCartItem(modelBuilder);
         }
 
 
@@ -43,7 +47,7 @@ namespace MarketPlace.Infrastructure.Data
                 e.Property(u => u.TwoFactorSecret).HasColumnName("two_factor_secret").HasMaxLength(64);
                 e.Property(u => u.IsVerified).HasColumnName("is_verified");
                 e.Property(u => u.IsActive).HasColumnName("is_active");
-                e.Property(u => u.ProfileImageUrl).HasColumnName("profile_image_url").HasMaxLength(500);
+                //e.Property(u => u.ProfileImageUrl).HasColumnName("profile_image_url").HasMaxLength(500);
                 e.Property(u => u.CreatedAt).HasColumnName("created_at");
 
 
@@ -159,6 +163,37 @@ namespace MarketPlace.Infrastructure.Data
                 e.HasIndex(t => t.SellerId);
                 e.HasIndex(t => t.CategoryId);
                 e.HasIndex(t => t.CreatedAt);
+            });
+        }
+
+        private static void ConfigureCart(ModelBuilder b)
+        {
+            b.Entity<Cart>(e =>
+            {
+                e.ToTable("Cart");
+                e.HasKey(c => c.CartId); 
+                e.Property(c => c.CartId).HasColumnName("cart_id").ValueGeneratedOnAdd();
+                e.Property(c => c.UserId).HasColumnName("user_id").IsRequired();
+                e.Property(c => c.CreatedAt).HasColumnName("created_at");
+                e.Property(c => c.UpdatedAt).HasColumnName("updated_at").IsConcurrencyToken();
+
+                e.HasIndex(c => c.UserId).IsUnique();
+            });
+        }
+
+        private static void ConfigureCartItem(ModelBuilder b)
+        {
+            b.Entity<CartItem>(e =>
+            {
+                e.ToTable("CartItem");
+                e.HasKey(ci => ci.CartItemId); 
+                e.Property(ci => ci.CartItemId).HasColumnName("cart_item_id").ValueGeneratedOnAdd();
+                e.Property(ci => ci.CartId).HasColumnName("cart_id").IsRequired();
+                e.Property(ci => ci.ItemId).HasColumnName("item_id").IsRequired();
+                e.Property(ci => ci.Quantity).HasColumnName("quantity").IsRequired();
+
+                e.HasIndex(ci => ci.CartId);
+                e.HasIndex(ci => ci.ItemId);
             });
         }
     }

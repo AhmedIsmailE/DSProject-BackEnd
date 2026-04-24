@@ -1,6 +1,7 @@
 ﻿using MarketPlace.Application.Commands;
 using MarketPlace.Backend.TCPServer;
 using MarketPlace.Backend.TCPServer.Routing;
+using MarketPlace.Domain.Repositories;
 using MarketPlace.Infrastructure;
 using MarketPlace.Infrastructure.Data;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +17,12 @@ builder.Services.AddScoped<CreateAccountCommandHandler>();
 builder.Services.AddScoped<CheckoutCartCommandHandler>();
 builder.Services.AddScoped<DepositCashCommandHandler>();
 builder.Services.AddScoped<AddItemCommandHandler>();
+builder.Services.AddScoped<DeleteItemCommandHandler>();
+builder.Services.AddScoped<EditItemCommandHandler>();
+builder.Services.AddScoped<UpdateCartItemQuantityCommandHandler>();
+builder.Services.AddScoped<AddToCartCommandHandler>();
+builder.Services.AddScoped<CreateStoreCommandHandler>();
+builder.Services.AddScoped<RemoveFromCartCommandHandler>();
 // --- 1. Register Infrastructure and Application Services ---
 // builder.Services.AddInfrastructure(); // Extension method to add DB/Repositories
 builder.Services.AddSingleton<CommandDispatcher>();
@@ -27,7 +34,7 @@ builder.Services.AddInfrastructure(builder.Configuration); // This one line regi
 builder.Services.AddControllers();
 
 // --- 3. Register the Raw TCP Listener as a Background Service ---
-builder.Services.AddHostedService<TcpListenerService>();
+builder.Services.AddHostedService<ServerSocketService>();
 
 var app = builder.Build();
 

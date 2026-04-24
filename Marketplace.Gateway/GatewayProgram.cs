@@ -1,36 +1,36 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using MarketPlace.Gateway.WebSockets;
+using System.Net.WebSockets;
 
-
-// This is the entry point for your Translation Gateway.
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container (e.g., your WebSocket manager and TCP wrapper)
-// builder.Services.AddSingleton<WebSocketConnectionManager>();
-// builder.Services.AddTransient<TcpClientWrapper>();
+// Force the Gateway to ALWAYS listen on port 5100
+builder.WebHost.UseUrls("http://localhost:5100");
 
 var app = builder.Build();
 
-// CRITICAL: Enable WebSockets middleware
-var webSocketOptions = new WebSocketOptions
+// Enable WebSockets
+app.UseWebSockets(new WebSocketOptions
 {
     KeepAliveInterval = TimeSpan.FromMinutes(2)
-};
-app.UseWebSockets(webSocketOptions);
+});
 
-// Map the endpoint that the React app will connect to (e.g., wss://localhost:xxxx/ws)
+// The single endpoint for incoming WS connections
 app.Map("/ws", async context =>
 {
     if (context.WebSockets.IsWebSocketRequest)
     {
-        using var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-        // TODO: Resolve WebSocketConnectionManager from DI and pass the webSocket to it
-        // var connectionManager = context.RequestServices.GetRequiredService<WebSocketConnectionManager>();
-        // await connectionManager.HandleConnectionAsync(webSocket);
+        using WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+
+        // Define where the internal Socket server is listening
+        string backendHost = "127.0.0.1";
+        int backendPort = 5000;
+
+        var proxy = new WebSocketToSocketProxy(webSocket, backendHost, backendPort);
+        await proxy.StartProxyingAsync(context.RequestAborted);
     }
     else
     {
-        context.Response.StatusCode = 400; // Bad Request if it's not a WebSocket
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
     }
 });
 
